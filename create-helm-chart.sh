@@ -21,7 +21,7 @@ echo "Converting the bundle to a Helm chart using helmify..."
 rm -rf helm || true
 mkdir -p helm
 cd helm
-helmify -f ./bundle.yaml spicedb-operator -generate-defaults
+rm -rf spicedb-operator || true && cat ../bundle.yaml |  helmify spicedb-operator -generate-defaults
 echo "Setting the version and name in Chart.yaml..."
 sed -i '' "s/^version:.*/version: $chosen_version/" spicedb-operator/Chart.yaml
 sed -i '' "s/^name:.*/name: spicedb-operator/" spicedb-operator/Chart.yaml

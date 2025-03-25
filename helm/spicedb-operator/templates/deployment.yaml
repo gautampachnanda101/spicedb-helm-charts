@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "spicedb-operator.fullname" . }}-spicedb-operator
+  labels:
+    app: spicedb-operator
+  {{- include "spicedb-operator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.spicedbOperator.replicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.spicedbOperator.strategy.rollingUpdate.maxSurge | quote
+        }}
+      maxUnavailable: {{ .Values.spicedbOperator.strategy.rollingUpdate.maxUnavailable
+        | quote }}
+    type: {{ .Values.spicedbOperator.strategy.type | quote }}
+  selector:
+    matchLabels:
+      app: spicedb-operator
+    {{- include "spicedb-operator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: spicedb-operator
+        app.kubernetes.io/instance: spicedb-operator
+      {{- include "spicedb-operator.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - args: {{- toYaml .Values.spicedbOperator.spicedbOperator.args | nindent 8 }}
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.spicedbOperator.spicedbOperator.image.repository }}:{{ .Values.spicedbOperator.spicedbOperator.image.tag
+          | default .Chart.AppVersion }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: spicedb-operator
+        ports:
+        - containerPort: 8080
+          name: prometheus
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 15
+        resources: {}
+        terminationMessagePolicy: FallbackToLogsOnError
+      serviceAccountName: {{ include "spicedb-operator.fullname" . }}-spicedb-operator
