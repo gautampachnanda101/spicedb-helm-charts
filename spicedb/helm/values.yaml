@@ -1,25 +1,18 @@
 # spicedb-cluster/helm/values.yaml
-  nameOverride: "spicedb"
-  fullnameOverride: "spicedb"
+nameOverride: "spicedb"
+fullnameOverride: "spicedb"
 
-  ingress:
-    enabled: true
-    tls: true
-    tlsSecretName: spicedb-tls
-    annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: web
-    hosts:
-      - host: spicedb.localhost
-        paths:
-          - /
-  image:
-    repository: ghcr.io/authzed/spicedb
-    tag: v1.40.1
-
-postgresql:
-  enabled: true
-  postgresqlUsername: spicedb
-  postgresqlPassword: spicedbpassword
-  postgresqlDatabase: spicedb
-  service:
-    port: 5432
+ingress:
+  enabled: false
+  tls: true
+  tlsSecretName: spicedb-tls
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    cert-manager.io/cluster-issuer: "zerossl-issuer"
+  hosts:
+    - host: spicedb.localhost
+      paths:
+        - /
+image:
+  repository: ghcr.io/authzed/spicedb
+  tag: v1.40.1

@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: spicedb-cert
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: spicedb-tls
+  issuerRef:
+    name: zerossl-issuer
+    kind: ClusterIssuer
+  commonName: spicedb.localhost
+  dnsNames:
+    - spicedb.localhost
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days before expiration
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: spicedb-cert-dispatch
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: spicedb-tls-dispatch
+  issuerRef:
+    name: zerossl-issuer
+    kind: ClusterIssuer
+  commonName: spicedb.localhost
+  dnsNames:
+    - spicedb.localhost
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days before expiration

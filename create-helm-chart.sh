@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e -x
-
 echo "Fetching the latest 5 versions of spicedb-operator..."
-versions=$(curl -s https://api.github.com/repos/authzed/spicedb-operator/tags | jq -r '.[].name' | sed 's/^v//' | sort -r | head -n 5 | sort -V | sed 's/^/v/')
+source .env
+versions=$(curl -s https://api.github.com/repos/authzed/spicedb-operator/tags --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${GITHUB_TOKEN}" | jq -r '.[].name' | sed 's/^v//' | sort  --version-sort | sed 's/^/v/')
 echo "Found versions: $versions"
 
 # Display the versions and prompt the user to choose one

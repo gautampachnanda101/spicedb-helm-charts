@@ -1,0 +1,40 @@
+dashboard:
+  enabled: true
+  domain: traefik.localhost
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+additionalArguments:
+  - "--api.insecure=true"
+  - "--entrypoints.web.address=:80"
+  - "--entrypoints.websecure.address=:443"
+  - "--providers.kubernetescrd"
+  - "--providers.kubernetesingress"
+  - "--entrypoints.dashboard.address=:8080"
+  - "--api.dashboard=true"
+  - "--api.debug=true"
+  - "--log.level=DEBUG"
+  - "--accesslog=true"
+  - "--accesslog.filepath=/access.log"
+  - "insecureSkipVerify=true"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    cert-manager.io/cluster-issuer: "zerossl-issuer"
+  hosts:
+    - host: traefik.localhost
+      paths:
+        - /
+  tls:
+    - secretName: traefik-tls
+      hosts:
+        - traefik.localhost

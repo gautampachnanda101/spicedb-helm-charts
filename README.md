@@ -12,9 +12,26 @@ Pre-requisite:
 - Helm v3
 - Kubernetes cluster (Docker Desktop)
 - kubectl
-- [spicedb-operator](https://github.com/authzed/spicedb-operator) build locally helm chart
 - kubectx
+- make command
+- [spicedb-operator](https://github.com/authzed/spicedb-operator) build locally helm chart
+
+
+Once you have docker-desktop running, with kubernetes cluster, you can install the spicedb-operator helm chart using the following steps:
+This with assumption have dependencies installed and running.
+
+
+**Setup a .env file with the following values:**
+
+```.env
+GITHUB_TOKEN=<github-token>
+```
+
+**To install the helm chart, run the following command:**
 
 ```makefile
-make deploy-chart
+make deploy-local
 ```
+
+## To Do
+Fix ingress/traefik configuration to expose the service to the outside world.

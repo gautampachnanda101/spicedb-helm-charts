@@ -1,0 +1,29 @@
+replicaCount: 1
+fullnameOverride: "otel-lgtm"
+image:
+  repository: grafana/otel-lgtm
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port:
+    - name: http
+      port: 3000
+      targetPort: 3000
+    - name: telemetry-grpc
+      port: 4317
+      targetPort: 4317
+    - name: telemetry-http
+      port: 4318
+      targetPort: 4318
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    cert-manager.io/cluster-issuer: "zerossl-issuer"
+  hosts:
+    - host: grafana.localhost
+      paths: ["/"]
+  tls: []

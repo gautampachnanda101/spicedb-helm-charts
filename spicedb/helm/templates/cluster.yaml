@@ -1,0 +1,21 @@
+apiVersion: authzed.com/v1alpha1
+kind: SpiceDBCluster
+metadata:
+  name: spicedb
+  namespace: {{ .Release.Namespace }}
+spec:
+  channel: stable
+  version: v1.40.1
+  config:
+    logLevel: debug
+    logFormat: console
+    datastoreEngine: postgres
+    replicas: 3
+    migrationLogLevel: debug
+    dispatchClusterEnabled: true
+    serviceAccountName: spicedb-cluster-service-account
+    otelCollectorEndpoint: otel-lgtm.default.svc.cluster.local:4317
+    otelCollectorInsecure: true
+    otelProvider: otlpgrpc
+    otelProtocol: "grpc"
+  secretName: spicedb-config-secret

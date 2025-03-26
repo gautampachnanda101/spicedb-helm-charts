@@ -1,0 +1,5 @@
+apiVersion: v2
+name: otel-lgtm
+description: A Helm chart to deploy docker-otel-lgtm
+version: 0.1.0
+appVersion: "latest"

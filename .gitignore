@@ -3,3 +3,5 @@ spicedb/helm/charts
 spicedb/helm/Chart.lock
 helm/*.tgz
 /helm/spicedb-operator/
+/template.yaml
+/.env
