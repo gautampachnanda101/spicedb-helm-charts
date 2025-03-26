@@ -14,6 +14,10 @@ Pre-requisite:
 - kubectl
 - kubectx
 - make command
+- Docker Desktop , with kubernetes cluster enabled
+- traeffik ingress controller
+- Postgres database
+- Authzed tools installed for verification
 - [spicedb-operator](https://github.com/authzed/spicedb-operator) build locally helm chart
 
 
@@ -34,4 +38,4 @@ make deploy-local
 ```
 
 ## To Do
-Fix ingress/traefik configuration to expose the service to the outside world.
+Fix ingress/[traefik](https://traefik.io/) configuration to expose the service to the outside world.
