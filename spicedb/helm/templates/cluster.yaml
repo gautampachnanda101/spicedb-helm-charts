@@ -14,7 +14,7 @@ spec:
     migrationLogLevel: debug
     dispatchClusterEnabled: true
     serviceAccountName: spicedb-cluster-service-account
-    otelCollectorEndpoint: otel-lgtm.default.svc.cluster.local:4317
+    otelCollectorEndpoint: otel-lgtm.otel-lgtm..svc.cluster.local:4317
     otelCollectorInsecure: true
     otelProvider: otlpgrpc
     otelProtocol: "grpc"

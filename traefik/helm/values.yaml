@@ -1,40 +1,54 @@
 dashboard:
   enabled: true
   domain: traefik.localhost
-
+serversTransport:
+  insecureSkipVerify: true
+ssl:
+  enabled: true
+  enforced: true
+  permanentRedirect: true
+  generateTLS: true
+  defaultCN: "*.localhost"
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: true
+    allowExternalNameService: true
+    allowEmptyServices: true
+    namespaces: []
+  kubernetesIngress:
+    enabled: true
+    allowCrossNamespace: true
+    allowExternalNameService: true
+    allowEmptyServices: true
+    namespaces: []
+    publishedService:
+      enabled: true
+logs:
+  general:
+    level: DEBUG
+  access:
+    enabled: true
+    filters: {}
+    fields:
+      general:
+        defaultmode: keep
+        names: {}
+        headers:
+          defaultmode: drop
+          names: {}
 ingressRoute:
   dashboard:
     enabled: true
-
-additionalArguments:
-  - "--api.insecure=true"
-  - "--entrypoints.web.address=:80"
-  - "--entrypoints.websecure.address=:443"
-  - "--providers.kubernetescrd"
-  - "--providers.kubernetesingress"
-  - "--entrypoints.dashboard.address=:8080"
-  - "--api.dashboard=true"
-  - "--api.debug=true"
-  - "--log.level=DEBUG"
-  - "--accesslog=true"
-  - "--accesslog.filepath=/access.log"
-  - "insecureSkipVerify=true"
-
-service:
-  type: ClusterIP
-  port: 80
-  targetPort: 8080
-
-ingress:
-  enabled: true
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    cert-manager.io/cluster-issuer: "zerossl-issuer"
-  hosts:
-    - host: traefik.localhost
-      paths:
-        - /
-  tls:
-    - secretName: traefik-tls
-      hosts:
-        - traefik.localhost
+    entryPoints:
+      - "traefik"
+      - "web"
+      - "websecure"
+    matchRule: 'Host(`traefik.localhost`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))'
+tlsStore:
+  default:
+    defaultCertificate:
+      secretName: traefik-localhost-tls
